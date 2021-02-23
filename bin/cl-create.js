@@ -1,28 +1,28 @@
 #!/usr/bin/env node
 
-const program = require('commander');
+const program = require("commander");
 const fs = require("fs");
-const ora = require('ora');
-const chalk = require('chalk')
+const ora = require("ora");
+const chalk = require("chalk");
 
-program
-    .usage('Create component')
-    .parse(process.argv);
+program.usage("Create component").parse(process.argv);
 
 // 组件名称
 const [name] = program.args;
 
 if (!name) {
-    console.log(chalk.red('Component name is null!'))
-    process.exit(0);
+	console.log(chalk.red("Component name is null!"));
+	process.exit(0);
 }
 
-const componentPath = `${process.cwd()}/cool/components/${name}`
+const componentPath = `${process.cwd()}/cool/components/${name}`;
 
 // 文件内容
 const FILE_TEXT = {
-    common: `export default {};`,
-    index: `import components from "./components";
+	common: `export default {};`,
+	pages: `export default [];`,
+	views: `export default [];`,
+	index: `import components from "./components";
 import directives from "./directives";
 import filters from "./filters";
 import pages from "./pages";
@@ -40,37 +40,54 @@ export default {
     views
 };
 `
-}
+};
 
 async function start() {
-    const spinner = ora().start();
+	const spinner = ora().start();
 
-    spinner.color = 'green';
+	spinner.color = "green";
 
-    const files = ['components', 'directives', 'filters', 'pages', 'service', 'static', 'store', 'views']
+	const files = [
+		"components",
+		"directives",
+		"filters",
+		"pages",
+		"service",
+		"static",
+		"store",
+		"views"
+	];
 
-    fs.mkdirSync(componentPath)
+	fs.mkdirSync(componentPath);
 
-    files.forEach(e => {
-        fs.mkdirSync(`${componentPath}/${e}`)
+	files.forEach((e) => {
+		fs.mkdirSync(`${componentPath}/${e}`);
 
-        if (!['static'].includes(e)) {
-            fs.writeFileSync(`${componentPath}/${e}/index.js`, FILE_TEXT.common);
-        }
-    })
+		let key = null;
 
-    fs.writeFileSync(`${componentPath}/index.js`, FILE_TEXT.index);
+		if (e !== "static") {
+			if (["pages", "views"].includes(e)) {
+				key = e;
+			} else {
+				key = "common";
+			}
 
-    spinner.stop()
+			fs.writeFileSync(`${componentPath}/${e}/index.js`, FILE_TEXT[key]);
+		}
+	});
 
-    console.log(chalk.green(`${name} created successfully!`))
+	fs.writeFileSync(`${componentPath}/index.js`, FILE_TEXT.index);
+
+	spinner.stop();
+
+	console.log(chalk.green(`${name} created successfully!`));
 }
 
 fs.stat(componentPath, (error, status) => {
-    if (status) {
-        console.log(chalk.red(`${name} is exist!`))
-        process.exit(0);
-    } else {
-        start()
-    }
-})
+	if (status) {
+		console.log(chalk.red(`${name} is exist!`));
+		process.exit(0);
+	} else {
+		start();
+	}
+});

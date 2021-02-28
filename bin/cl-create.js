@@ -5,17 +5,18 @@ const fs = require("fs");
 const ora = require("ora");
 const chalk = require("chalk");
 
-program.usage("Create component").parse(process.argv);
+program.usage("Create module").parse(process.argv);
 
-// 组件名称
+// 模块名称
 const [name] = program.args;
 
 if (!name) {
-	console.log(chalk.red("Component name is null!"));
+	console.log(chalk.red("Module name is null!"));
 	process.exit(0);
 }
 
-const componentPath = `${process.cwd()}/cool/components/${name}`;
+// 模块地址
+const modulePath = `${process.cwd()}/cool/modules/${name}`;
 
 // 文件内容
 const FILE_TEXT = {
@@ -58,10 +59,10 @@ async function start() {
 		"views"
 	];
 
-	fs.mkdirSync(componentPath);
+	fs.mkdirSync(modulePath);
 
 	files.forEach((e) => {
-		fs.mkdirSync(`${componentPath}/${e}`);
+		fs.mkdirSync(`${modulePath}/${e}`);
 
 		let key = null;
 
@@ -72,18 +73,18 @@ async function start() {
 				key = "common";
 			}
 
-			fs.writeFileSync(`${componentPath}/${e}/index.js`, FILE_TEXT[key]);
+			fs.writeFileSync(`${modulePath}/${e}/index.js`, FILE_TEXT[key]);
 		}
 	});
 
-	fs.writeFileSync(`${componentPath}/index.js`, FILE_TEXT.index);
+	fs.writeFileSync(`${modulePath}/index.js`, FILE_TEXT.index);
 
 	spinner.stop();
 
 	console.log(chalk.green(`${name} created successfully!`));
 }
 
-fs.stat(componentPath, (error, status) => {
+fs.stat(modulePath, (error, status) => {
 	if (status) {
 		console.log(chalk.red(`${name} is exist!`));
 		process.exit(0);

@@ -16,7 +16,7 @@ if (!name) {
 }
 
 // 模块地址
-const modulePath = `${process.cwd()}/cool/modules/${name}`;
+const modulePath = `${process.cwd()}/src/cool/modules/${name}`;
 
 // 文件内容
 const FILE_TEXT = {

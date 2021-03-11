@@ -13,7 +13,6 @@ if (Number.parseFloat(process.versions.node) < 8) {
 
 program
 	.version(pkg.version, "-V, --version", "output the current version")
-	.command("install <name>", "install dependencies", { isDefault: true })
 	.command("create <name>", "create module", { isDefault: true })
 	.parse(process.argv);
 

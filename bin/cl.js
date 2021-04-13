@@ -13,7 +13,8 @@ if (Number.parseFloat(process.versions.node) < 8) {
 
 program
 	.version(pkg.version, "-V, --version", "output the current version")
-	.command("create <name>", "create module", { isDefault: true })
+	.command("create <name>", "创建模块", { isDefault: true })
+	.command("server <name>", "创建微服务", { isDefault: true })
 	.parse(process.argv);
 
 if (program.debug) console.log(program.opts());
